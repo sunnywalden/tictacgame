@@ -74,7 +74,7 @@ class Game extends React.Component {
         }
         if (caculateWinner(squares) || squares[i]) {
             // return;
-            alert('Game over!Start again!');
+            // alert('Game over!Start again!');
             return;
         }
         squares[i] = this.state.xIsNext? 'X' : 'O';
@@ -126,7 +126,10 @@ class Game extends React.Component {
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
-        } else {
+        } else if (this.state.stepNumber === 9) {
+            status = 'No winner'
+        }
+        else {
             status = 'Next player: ' + (this.state.xIsNext? 'X' : 'O');
         }
 
