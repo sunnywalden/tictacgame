@@ -15,6 +15,7 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
         <Square
+            key={i}
             value={this.props.squares[i]}
             onClick={() =>
                 this.props.onClick(i)
@@ -24,27 +25,23 @@ class Board extends React.Component {
   }
 
   render() {
+      return (
+        <div>
+            {
+                Array.from({length: 3}, (_, index1) => (
+                    <div className="board-row">
+                        {
+                            Array.from({length: 3}, (_, index2) => (
+                                    this.renderSquare(index1 * 3 + index2)
+                                )
+                            )
+                        }
+                    </div>
+                ))
+            }
 
-    return (
-      <div>
-        {/*<div className="status">{status}</div>*/}
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
       </div>
-    );
+    )
   }
 }
 
@@ -63,12 +60,13 @@ class Game extends React.Component {
     }
 
     handleClick(i) {
+        let columnNumber;
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length -1];
         const squares = current.squares.slice();
         const rowNumber = 1 + parseInt(i / 3);
         if ((i % 3) === 0) {
-            var columnNumber = 1;
+            columnNumber = 1;
         } else if ((i % 3) === 1) {
             columnNumber = 2;
         } else {
@@ -105,7 +103,7 @@ class Game extends React.Component {
 
         const moves = history.map((step, move) => {
                 const desc = move ?
-                    'Go to move #' + move + '(' + history[move - 1].rowNumber + ',' + history[move - 1].rowNumber + ')' :
+                    'Go to move #' + move + '(' + history[move - 1].rowNumber + ',' + history[move - 1].columnNumber + ')' :
                     'Go to game start';
                 if (move === history.length - 1) {
                     return (
@@ -167,6 +165,7 @@ function caculateWinner(squares) {
         [0, 4, 8],
         [2, 4, 6],
     ];
+
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
